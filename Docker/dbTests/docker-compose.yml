@@ -1,0 +1,14 @@
+version: '3.4'
+volumes:
+  mongodb:
+services:
+  mongo:
+    image: mongo
+    command: mongod
+    ports:
+      - "27017:27017"
+  # PythonAPP:
+  #   image: python:3.7.7-alpine3.10
+  #   command: python main.py
+  #   volumes:
+  #     - ../../src/api/main.py:/main.py
