@@ -1,12 +1,20 @@
 # Plano de trabalho
 
+## Responsável
+
+Atila Aloise de Almeida
+
+atilaloise@gmail.com
+
+(69) 98403 2211
+
 ## Introdução 
 
-Este projeto se encaixa em um contexto de testes para posição de SRE/DevOps, se faz necessário medir o nível de conhecimento e habilidades em múltiplas ferramentas que em conjunto entreguem uma aplicação com valor agregado relevante.
+Este projeto se encaixa em um contexto de testes para posição de SRE/DevOps, onde se faz necessário medir o nível de conhecimento e habilidades em múltiplas ferramentas que em conjunto entregam uma aplicação com valor agregado relevante.
 
 ## Justificativa
 
-O monitoramento de atividade e tópicos em alta no Twitter tem grande potencial para que empresas, profissionais da área de dados e produtores de conteúdo possam direcionar suas campanhas, identificar oportunidades e direcionar o esforço corporativo para atender áreas de interesse ou até mesmo identificar novos nichos de mercado.
+O monitoramento de atividade e tópicos em alta no Twitter tem grande potencial para que empresas, profissionais da área de dados e produtores de conteúdo para que possam direcionar suas campanhas, identificar oportunidades e direcionar o esforço corporativo para atender áreas de interesse ou até mesmo identificar novos nichos de mercado.
 
 ## Metas
 
@@ -50,14 +58,15 @@ Prazo de entrega: 18/03/2020 às 18:00
 ## Plano de Ação
 
 * [11/03]:
-    * Criação do plano de Trabalho;
-    * Criação das conta de Desenvolvedor, app e chaves de acesso;
-    * Criação do Repositório GIT;
-    * Definição de estrutura base de pastas;
+    * Criação do plano de Trabalho; √
+    * Criação das conta de Desenvolvedor, app e chaves de acesso; √
+    * Criação do Repositório GIT; √
+    * Definição de estrutura base de pastas; √
 
 * [12/03]:
-    * Definir arquitetura;
-    * Criar modelo de banco de dados;
+    * Definir arquitetura; √
+    * Criar modelo de banco de dados; √
+    * Criar feature dataBase para interagir com mongodb √
     * Criar feature getTweet e testes unitários;
 
 * [13/03]:
