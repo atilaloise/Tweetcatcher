@@ -7,7 +7,7 @@ class TweetHandler(Twython):
   def GetTweetsByHashtag(self, hashtag):    
     self.hashtag = hashtag
     self.dict_ = {'userName': [], 'userId': [], 'followers': [], 'date': [], 'text': [], 'tag': []}
-    self.query = self.search(q='{}'.format(self.hashtag), result_type='recent', count=100)
+    self.query = self.search(q='{}'.format(self.hashtag), result_type='recent', count=2)
     # for tweet in self.query['statuses']:
     #   self.dict_['userName'].append(tweet['user']['screen_name'])
     #   self.dict_['userId'].append(tweet['user']['id'])
@@ -21,19 +21,19 @@ class TweetHandler(Twython):
     # return self.dataFrame.head(5)  
   def ParseRecordsForMongoEngine(self):
     self.records = []
-    self.payload = ""
     for tweet in self.query['statuses']:
       self.userName = tweet['user']['screen_name']
       self.userId = tweet['user']['id']
       self.followers = tweet['user']['followers_count']
       self.date = tweet['created_at']
-      self.body = re.split("['-]", tweet['text'])
+      self.body = tweet['text'].replace('\n', ' ').replace('\r', '').replace('\'', '').replace('\"', '')
       self.tag = self.hashtag
       self.tweetRecord = '{{"dateTime": "{}", "tag": "{}", "body": "{}"}}'.format(self.date, self.tag, self.body)    
-      self.record = '{{"userName": "{}", "userId": "{}", "followers": "{}", "tweet": [{}]}}'.format(self.userName, self.userId, self.followers, self.tweetRecord)    
+      self.record = '"{{"userName": "{}", "userId": "{}", "followers": "{}", "tweet": [{}]}}"'.format(self.userName, self.userId, self.followers, self.tweetRecord)    
       self.records.append(self.record)
-    self.payload = ','.join(self.records)
-    return json.loads(json.dumps(self.payload))
+    return self.records
+
+
 
 
 """ 
@@ -44,15 +44,14 @@ Exemplo de uso
 from api.libs.handler.get_tweets import TweetHandler
 
 
-hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
-
-
 TWITTER_APP_KEY = 'YezipOoweQ3FbSgyRihKZ5BbZ'  #supply the appropriate value
 TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy' 
 TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
 TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
 
-hashtags = ["#raml"]
+hashtags = ["#apifirst", "#openbanking"]
+#hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
+
 
 apiConnection = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 
@@ -60,7 +59,12 @@ for tag in hashtags:
   print(tag)
   apiConnection.GetTweetsByHashtag(tag)
   payload = apiConnection.ParseRecordsForMongoEngine()
-  print(payload)
+#   if payload:
+#     print(payload)
+
+for record in payload:
+  print(record)
+
 
 
 print(apiConnection.GetTweetsByHashtag.__self__.statuses)
