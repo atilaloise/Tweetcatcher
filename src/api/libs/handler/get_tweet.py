@@ -1,26 +1,31 @@
+#!/usr/local/bin/python3
+from libs.model.db_model import Tweet
+from mongoengine import connect
+from mongoengine import disconnect
 from twython import Twython
-#import pandas as pd
+import pandas as pd
 import json
-import re
+
+
 
 class TweetHandler(Twython):
   def GetTweetsByHashtag(self, hashtag):    
     self.hashtag = hashtag
     self.dict_ = {'userName': [], 'userId': [], 'followers': [], 'date': [], 'text': [], 'tag': []}
-    self.query = self.search(q='{}'.format(self.hashtag), result_type='recent', count=2)
-    # for tweet in self.query['statuses']:
-    #   self.dict_['userName'].append(tweet['user']['screen_name'])
-    #   self.dict_['userId'].append(tweet['user']['id'])
-    #   self.dict_['followers'].append(tweet['user']['followers_count'])
-    #   self.dict_['date'].append(tweet['created_at'])
-    #   self.dict_['text'].append(tweet['text'])
-    #   self.dict_['tag'].append(self.hashtag)
-    # # ESTRUTURANDO DADOS EM DATAFRAMES PARA MELHOR visualização
-    # self.dataFrame = pd.DataFrame(self.dict_)
-    # self.dataFrame.sort_values(by='followers', inplace=True, ascending=False)
-    # return self.dataFrame.head(5)  
-  def ParseRecordsForMongoEngine(self):
-    self.records = []
+    self.query = self.search(q='{}'.format(self.hashtag), result_type='recent', count=100)
+    for tweet in self.query['statuses']:
+      self.dict_['userName'].append(tweet['user']['screen_name'])
+      self.dict_['userId'].append(tweet['user']['id'])
+      self.dict_['followers'].append(tweet['user']['followers_count'])
+      self.dict_['date'].append(tweet['created_at'])
+      self.dict_['text'].append(tweet['text'])
+      self.dict_['tag'].append(self.hashtag)
+    # ESTRUTURANDO DADOS EM DATAFRAMES PARA MELHOR visualização
+    self.dataFrame = pd.DataFrame(self.dict_)
+    self.dataFrame.sort_values(by='followers', inplace=True, ascending=False)
+    print(self.dataFrame.head(5))
+  def StoreTweet(self):
+    connect('tweetcatcher', host='localhost')
     for tweet in self.query['statuses']:
       self.userName = tweet['user']['screen_name']
       self.userId = tweet['user']['id']
@@ -28,13 +33,10 @@ class TweetHandler(Twython):
       self.date = tweet['created_at']
       self.body = tweet['text'].replace('\n', ' ').replace('\r', '').replace('\'', '').replace('\"', '')
       self.tag = self.hashtag
-      self.tweetRecord = '{{"dateTime": "{}", "tag": "{}", "body": "{}"}}'.format(self.date, self.tag, self.body)    
-      self.record = '"{{"userName": "{}", "userId": "{}", "followers": "{}", "tweet": [{}]}}"'.format(self.userName, self.userId, self.followers, self.tweetRecord)    
-      self.records.append(self.record)
-    return self.records
-
-
-
+      self.tweetInfo = json.loads('{{"userName": "{}", "userId": "{}", "followers": "{}", "dateTime": "{}", "tag": "{}", "body": "{}"}}'.format(self.userName, self.userId, self.followers, self.date, self.tag, self.body))
+      self.tweetRecord = Tweet(**self.tweetInfo)
+      self.tweetRecord.save()
+    disconnect()
 
 """ 
 
@@ -73,3 +75,5 @@ print(apiConnection.GetTweetsByHashtag.__self__.dataFrame.head(10))
 print(apiConnection.GetTweetsByHashtag.__self__.query['statuses'][0]['text'])
 
  """
+
+
