@@ -23,7 +23,7 @@ class TweetHandler(Twython):
     # ESTRUTURANDO DADOS EM DATAFRAMES PARA MELHOR visualização
     self.dataFrame = pd.DataFrame(self.dict_)
     self.dataFrame.sort_values(by='followers', inplace=True, ascending=False)
-    print(self.dataFrame.head(5))
+    return self.dataFrame.head(5)
   def StoreTweet(self):
     connect('tweetcatcher', host='localhost')
     for tweet in self.query['statuses']:

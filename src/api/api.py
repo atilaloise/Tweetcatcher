@@ -19,9 +19,9 @@ queryTwitter = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET,
                              TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 
 for tag in hashtags:
-  queryTwitter.GetTweetsByHashtag(tag)
+  topFive = queryTwitter.GetTweetsByHashtag(tag)
   queryTwitter.StoreTweet()
-  
+  print(topFive)
 
 # app = Flask(__name__)
 # api = Api(app)
