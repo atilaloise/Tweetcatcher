@@ -10,7 +10,8 @@ class Tweet(mongoengine.Document):
     dateTime = mongoengine.DateTimeField()
     tag = mongoengine.StringField()
     body = mongoengine.StringField()
-
+    lang = mongoengine.StringField()
+    location = mongoengine.StringField()
 """ 
 USAGE EXAMPLE
 

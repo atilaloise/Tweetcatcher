@@ -11,12 +11,11 @@ TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy'
 TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
 TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
 
-#hashtags = ["#linux", "#openbanking"]
-hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
+hashtags = ["#swagger"]
+#hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
 
 
-queryTwitter = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET,
-                             TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+queryTwitter = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET,TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 
 for tag in hashtags:
   topFive = queryTwitter.GetTweetsByHashtag(tag)
