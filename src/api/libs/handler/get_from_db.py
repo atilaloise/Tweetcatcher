@@ -12,7 +12,7 @@ class DbHandler():
                       '$group': {
                           '_id': {
                               '$dateToString': {
-                                  'format': 'HoraDoDia-%H', 
+                                  'format': '%H_horas', 
                                   'date': '$dateTime'
                               }
                           }, 
@@ -22,7 +22,7 @@ class DbHandler():
                       }
                   }
               ]
-        pprint.pprint(list(self.db.tweet.aggregate(self.query)))
+        return list(self.db.tweet.aggregate(self.query))
     def GetByTagLocationLang(self):
         self.query = [
                         {
@@ -38,7 +38,7 @@ class DbHandler():
                             }
                         }
                     ]
-        pprint.pprint(list(self.db.tweet.aggregate(self.query)))
+        return list(self.db.tweet.aggregate(self.query))
 
 
 '''

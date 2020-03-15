@@ -6,10 +6,6 @@ import json
 from libs.handler.get_tweet import TweetHandler
 from libs.handler.get_from_db import DbHandler
 
-# query = DbHandler()
-# query.GetByDayHour()
-# # #query.GetByTagLocationLang()
-
 app = Flask(__name__)
 api = Api(app)
 
@@ -34,22 +30,20 @@ class GetTweet(Resource):
       self.response.append(self.dict)
     return self.response
 
-class GetFromDB(Resource):
-   def post(self):
-   	a = 1
-
 class GetByTagLocationLang(Resource):
-   def post(self):
-   	a = 1
+  def get(self):
+    self.query = DbHandler()
+    return self.query.GetByTagLocationLang()
+
 
 class GetByDayHour(Resource):
-   def post(self):
-   	a = 1
+  def get(self):
+    self.query = DbHandler()
+    return self.query.GetByDayHour()
 
 
 api.add_resource(V1, '/v1')
 api.add_resource(GetTweet, '/v1/tweets')
-api.add_resource(GetFromDB, '/v1/tweets/GetFromDB')
 api.add_resource(GetByTagLocationLang, '/v1/tweets/GetFromDB/bytaglocationlang')
 api.add_resource(GetByDayHour, '/v1/tweets/GetFromDB/bydayhour')
 
