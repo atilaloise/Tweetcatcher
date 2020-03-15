@@ -48,10 +48,10 @@ class GetByDayHour(Resource):
 
 
 api.add_resource(V1, '/v1')
-api.add_resource(GetTweet, '/v1/gettweet')
-api.add_resource(GetFromDB, '/v1/gettweet/GetFromDB')
-api.add_resource(GetByTagLocationLang, '/v1/gettweet/GetFromDB/bytaglocationlang')
-api.add_resource(GetByDayHour, '/v1/gettweet/GetFromDB/bydayhour')
+api.add_resource(GetTweet, '/v1/tweets')
+api.add_resource(GetFromDB, '/v1/tweets/GetFromDB')
+api.add_resource(GetByTagLocationLang, '/v1/tweets/GetFromDB/bytaglocationlang')
+api.add_resource(GetByDayHour, '/v1/tweets/GetFromDB/bydayhour')
 
 
 if __name__ == '__main__':
