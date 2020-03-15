@@ -4,33 +4,76 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 import json
 from libs.handler.get_tweet import TweetHandler
+from libs.handler.get_from_db import DbHandler
+
+# query = DbHandler()
+# query.GetByDayHour()
+# # #query.GetByTagLocationLang()
+
+app = Flask(__name__)
+api = Api(app)
+
+class V1(Resource):
+  def get(self):
+     return "Bem vindo ao tweetCatcher"
+
+class GetTweet(Resource):
+  def get(self):
+    self.TWITTER_APP_KEY = 'YezipOoweQ3FbSgyRihKZ5BbZ'  # supply the appropriate value
+    self.TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy'
+    self.TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
+    self.TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
+    self.hashtags = ["#swagger", "#devops"]
+    # hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
+    self.queryTwitter = TweetHandler(self.TWITTER_APP_KEY, self.TWITTER_APP_KEY_SECRET,self.TWITTER_ACCESS_TOKEN, self.TWITTER_ACCESS_TOKEN_SECRET)
+    self.response = []
+    self.tag = []
+    for tag in self.hashtags:
+      self.tag.append(tag)
+      self.response.append(self.queryTwitter.GetTweetsByHashtag(tag))
+    return self.response
+
+class GetFromDB(Resource):
+   def post(self):
+   	a = 1
+
+class GetByTagLocationLang(Resource):
+   def post(self):
+   	a = 1
+
+class GetByDayHour(Resource):
+   def post(self):
+   	a = 1
 
 
-TWITTER_APP_KEY = 'YezipOoweQ3FbSgyRihKZ5BbZ'  # supply the appropriate value
-TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy'
-TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
-TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
-
-hashtags = ["#swagger"]
-#hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
+api.add_resource(V1, '/v1')
+api.add_resource(GetTweet, '/v1/gettweet')
+api.add_resource(GetFromDB, '/v1/gettweet/GetFromDB')
+api.add_resource(GetByTagLocationLang, '/v1/gettweet/GetFromDB/bytaglocationlang')
+api.add_resource(GetByDayHour, '/v1/gettweet/GetFromDB/bydayhour')
 
 
-queryTwitter = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET,TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
-
-for tag in hashtags:
-  topFive = queryTwitter.GetTweetsByHashtag(tag)
-  queryTwitter.StoreTweet()
-  print(topFive)
-
-# app = Flask(__name__)
-# api = Api(app)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 
-# class authorization(Resource):
-#    def post(self):
-#    	a = 1
+# query = GetFromDb()
+# query.GetByDayHour()
+# query.GetByTagLocationLang()
+
+# TWITTER_APP_KEY = 'YezipOoweQ3FbSgyRihKZ5BbZ'  # supply the appropriate value
+# TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy'
+# TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
+# TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
+
+# hashtags = ["#swagger", "#devops"]
+# # hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
 
 
-# api.add_resource(authorization, '/authorization')
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0')
+# queryTwitter = TweetHandler(TWITTER_APP_KEY, TWITTER_APP_KEY_SECRET,TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+
+# for tag in hashtags:
+#   print(queryTwitter.GetTweetsByHashtag(tag))
+#   queryTwitter.StoreTweet()
+#   print(topFive)
+
