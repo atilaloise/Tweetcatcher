@@ -23,14 +23,15 @@ class GetTweet(Resource):
     self.TWITTER_APP_KEY_SECRET = 'tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy'
     self.TWITTER_ACCESS_TOKEN = '1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO'
     self.TWITTER_ACCESS_TOKEN_SECRET = 'gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S'
-    self.hashtags = ["#swagger", "#devops"]
-    # hashtags = ["#openbanking", "#apifirst", "#devops", "cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
+    #self.hashtags = ["#swagger", "#devops"]
+    self.hashtags = ["#openbanking", "#apifirst", "#devops", "#cloudfirst", "#microservices", "#apigateway", "#oauth", "#swagger", "#raml", "#openapis"]
     self.queryTwitter = TweetHandler(self.TWITTER_APP_KEY, self.TWITTER_APP_KEY_SECRET,self.TWITTER_ACCESS_TOKEN, self.TWITTER_ACCESS_TOKEN_SECRET)
     self.response = []
-    self.tag = []
     for tag in self.hashtags:
-      self.tag.append(tag)
-      self.response.append(self.queryTwitter.GetTweetsByHashtag(tag))
+      self.dict = {tag:[]}
+      for item in self.queryTwitter.GetTweetsByHashtag(tag):
+        self.dict[tag].append(item)
+      self.response.append(self.dict)
     return self.response
 
 class GetFromDB(Resource):
