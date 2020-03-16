@@ -43,6 +43,21 @@ class GetTweet(Resource):
         self.dict[tag].append(item)
       self.response.append(self.dict)
     return self.response
+  def post(self):
+    print(request.json)
+    self.TWITTER_APP_KEY = request.json['TWITTER_APP_KEY']
+    self.TWITTER_APP_KEY_SECRET = request.json['TWITTER_APP_KEY_SECRET']
+    self.TWITTER_ACCESS_TOKEN = request.json['TWITTER_ACCESS_TOKEN']
+    self.TWITTER_ACCESS_TOKEN_SECRET = request.json['TWITTER_ACCESS_TOKEN_SECRET']
+    self.hashtags = request.json['hashtags']
+    self.queryTwitter = TweetHandler(self.TWITTER_APP_KEY, self.TWITTER_APP_KEY_SECRET,self.TWITTER_ACCESS_TOKEN, self.TWITTER_ACCESS_TOKEN_SECRET)
+    self.response = []
+    for tag in self.hashtags:
+      self.dict = {tag:[]}
+      for item in self.queryTwitter.GetTweetsByHashtag(tag):
+        self.dict[tag].append(item)
+      self.response.append(self.dict)
+    return self.response
 
 class GetByTagLocationLang(Resource):
   def get(self):
@@ -124,3 +139,10 @@ if __name__ == '__main__':
 #   queryTwitter.StoreTweet()
 #   print(topFive)
 
+""" {
+"TWITTER_APP_KEY": "YezipOoweQ3FbSgyRihKZ5BbZ",
+"TWITTER_APP_KEY_SECRET": "tWRn9kkswLkxbXK78aOuHbxvb7C1BG3SFZDfxVDHgIdLqkFkTy",
+"TWITTER_ACCESS_TOKEN": "1237878615942946818-BY4593QtzNK0Ryig8Jh203c8Stq7DO",
+"TWITTER_ACCESS_TOKEN_SECRET": "gjlTPvFbNlGYnGh7011lgyjf8oiWOASSmp244Kce1KZ6S",
+"hashtags": ["#swagger", "#devops"]
+} """
