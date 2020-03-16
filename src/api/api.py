@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_restful import Resource, Api
-from pyfluent.client import FluentSender
 import json
 from libs.handler.get_tweet import TweetHandler
 from libs.handler.get_from_db import DbHandler
