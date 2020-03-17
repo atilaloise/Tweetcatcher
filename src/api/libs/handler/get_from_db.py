@@ -4,7 +4,7 @@ import pprint
 
 class DbHandler():
     def __init__(self):
-        self.client = MongoClient('localhost', 27017)
+        self.client = MongoClient('mongo', 27017)
         self.db = self.client.tweetcatcher
     def GetByDayHour(self):
         self.query = [

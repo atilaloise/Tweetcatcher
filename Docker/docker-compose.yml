@@ -1,0 +1,40 @@
+version: '3.4'
+networks:
+  backend:
+services:
+  mongo:
+    image: mongo
+    command: mongod
+    ports:
+      - "27017:27017"
+    networks:
+      backend:
+        aliases:
+          - mongo
+  api:
+    image: tweetcatcher
+    ports:
+      - "5000:5000"
+    networks:
+      backend:
+  # grafana:
+  #   image: grafana/grafana
+  #   user: "104"
+  #   depends_on:
+  #     - prometheus
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     backend:
+  #       aliases:
+  #         - grafana
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - 9090:9090
+  #   volumes:
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   networks:
+  #     backend:
+  #       aliases:
+  #         - prometheus

@@ -7,8 +7,10 @@ from libs.handler.get_tweet import TweetHandler
 from libs.handler.get_from_db import DbHandler
 from libs.handler.forms import CredentialsForm
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY']= '75cea5dc74444b8389e5bc6ee0afc0da'
+
 api = Api(app)
 
 TWITTER_APP_KEY = ''
@@ -72,8 +74,8 @@ class GetByDayHour(Resource):
 
 api.add_resource(V1, '/v1')
 api.add_resource(GetTweet, '/v1/tweets')
-api.add_resource(GetByTagLocationLang, '/v1/tweets/GetFromDB/bytaglocationlang')
-api.add_resource(GetByDayHour, '/v1/tweets/GetFromDB/bydayhour')
+api.add_resource(GetByTagLocationLang, '/v1/tweets/bytaglocationlang')
+api.add_resource(GetByDayHour, '/v1/tweets/bydayhour')
 
 
 apiRoutes = [{
@@ -81,11 +83,11 @@ apiRoutes = [{
               'title': 'Pega Amostra,salva e mostra Top5',
               'desc': 'Obtém Amostra de 100 Tweets por Hashtag, grava no MongoDb e mostra o top 5 por Hashtag'
             },{
-              'path': '/v1/tweets/GetFromDB/bytaglocationlang',
+              'path': '/v1/tweets/bytaglocationlang',
               'title': 'Agrupa todas as amostras por Tag, local e lingua',
               'desc': 'Recupera do banco de dados o total de tweets agrupados por Hashtag, localizaçao e Linguagem'
             },{
-              'path': '/v1/tweets/GetFromDB/bydayhour',
+              'path': '/v1/tweets/bydayhour',
               'title': 'Agrupa todas as amostras por Hora do dia',
               'desc': 'Recupera do banco de dados o total de tweets, agrupados por hora do dia'
             }]

@@ -1,7 +1,10 @@
+wheel
 mongoengine
 twython
 flask_restful
 flask
 flask_wtf
+numpy
 pandas
 pymongo
+flask_prometheus_metrics[flask]
