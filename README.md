@@ -164,9 +164,9 @@ caso desejar interagir diretamente, utilize o metodo GET
 
 ![RESPONSE](Project/assets/taglocationlang.png)
 
-### Buscando tweets por tag, local e linguagem
+### Buscando  Total de tweets por Hora do dia
 
-A rota `/v1/tweets/bytaglocationlang` retornará um totalizador de tweets por hashtag, linguagem e localização.
+A rota `/v1/tweets/bydayhour` retornará um totalizador de tweets por hashtag, linguagem e localização.
 caso desejar interagir diretamente, utilize o metodo GET
 
 ![RESPONSE](Project/assets/bydayhour.png)
