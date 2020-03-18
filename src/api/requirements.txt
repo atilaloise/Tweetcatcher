@@ -1,0 +1,13 @@
+wheel
+mongoengine
+twython
+flask_restful
+flask
+flask_wtf
+numpy
+pandas
+pymongo
+elastic-apm[flask]
+gunicorn
+python-json-logger
+python3-logstash
