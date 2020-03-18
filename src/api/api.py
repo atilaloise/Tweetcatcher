@@ -6,10 +6,20 @@ import json
 from libs.handler.get_tweet import TweetHandler
 from libs.handler.get_from_db import DbHandler
 from libs.handler.forms import CredentialsForm
+from elasticapm.contrib.flask import ElasticAPM
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= '75cea5dc74444b8389e5bc6ee0afc0da'
+
 api = Api(app)
+app.config['ELASTIC_APM'] = {
+
+  'SERVICE_NAME': 'tweetcatcher',
+
+  'SERVER_URL': 'http://apmserver:8200',
+}
+
+apm = ElasticAPM(app)
 
 TWITTER_APP_KEY = ''
 TWITTER_APP_KEY_SECRET = ''
@@ -34,6 +44,12 @@ class GetTweet(Resource):
     self.TWITTER_ACCESS_TOKEN = TWITTER_ACCESS_TOKEN
     self.TWITTER_ACCESS_TOKEN_SECRET = TWITTER_ACCESS_TOKEN_SECRET
     self.hashtags = hashtags
+    if not self.TWITTER_APP_KEY:
+		    raise ValueError("No TWITTER_APP_KEY")
+    if not self.TWITTER_APP_KEY_SECRET:
+		    raise ValueError("No TWITTER_APP_KEY_SECRET")
+    if not self.TWITTER_APP_KEY_SECRET:
+		    raise ValueError("No hashtags")
     self.queryTwitter = TweetHandler(self.TWITTER_APP_KEY, self.TWITTER_APP_KEY_SECRET,self.TWITTER_ACCESS_TOKEN, self.TWITTER_ACCESS_TOKEN_SECRET)
     self.response = []
     for tag in self.hashtags:
@@ -43,7 +59,6 @@ class GetTweet(Resource):
       self.response.append(self.dict)
     return self.response
   def post(self):
-    print(request.json)
     self.TWITTER_APP_KEY = request.json['TWITTER_APP_KEY']
     self.TWITTER_APP_KEY_SECRET = request.json['TWITTER_APP_KEY_SECRET']
     self.TWITTER_ACCESS_TOKEN = request.json['TWITTER_ACCESS_TOKEN']
@@ -72,8 +87,8 @@ class GetByDayHour(Resource):
 
 api.add_resource(V1, '/v1')
 api.add_resource(GetTweet, '/v1/tweets')
-api.add_resource(GetByTagLocationLang, '/v1/tweets/GetFromDB/bytaglocationlang')
-api.add_resource(GetByDayHour, '/v1/tweets/GetFromDB/bydayhour')
+api.add_resource(GetByTagLocationLang, '/v1/tweets/bytaglocationlang')
+api.add_resource(GetByDayHour, '/v1/tweets/bydayhour')
 
 
 apiRoutes = [{
@@ -81,11 +96,11 @@ apiRoutes = [{
               'title': 'Pega Amostra,salva e mostra Top5',
               'desc': 'Obtém Amostra de 100 Tweets por Hashtag, grava no MongoDb e mostra o top 5 por Hashtag'
             },{
-              'path': '/v1/tweets/GetFromDB/bytaglocationlang',
+              'path': '/v1/tweets/bytaglocationlang',
               'title': 'Agrupa todas as amostras por Tag, local e lingua',
               'desc': 'Recupera do banco de dados o total de tweets agrupados por Hashtag, localizaçao e Linguagem'
             },{
-              'path': '/v1/tweets/GetFromDB/bydayhour',
+              'path': '/v1/tweets/bydayhour',
               'title': 'Agrupa todas as amostras por Hora do dia',
               'desc': 'Recupera do banco de dados o total de tweets, agrupados por hora do dia'
             }]

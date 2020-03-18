@@ -6,13 +6,14 @@ from twython import Twython
 import pandas as pd
 import json
 
+
 class TweetHandler(Twython):
   def GetTweetsByHashtag(self, hashtag):    
     self.hashtag = hashtag
     self.response = []
     self.dict_ = {'userName': [], 'userId': [], 'followers': [], 'lang': [], 'location': [], 'date': [], 'text': [], 'tag': []}
     self.query = self.search(q='{}'.format(self.hashtag), result_type='recent', count=100)
-    connect('tweetcatcher', host='localhost')
+    connect('tweetcatcher', host='mongo')
     for tweet in self.query['statuses']:
       self.userName = tweet['user']['screen_name']
       self.userId = tweet['user']['id']
@@ -22,7 +23,7 @@ class TweetHandler(Twython):
       self.location = tweet['user']['location']
       self.body = tweet['text'].replace('\n', ' ').replace('\r', '').replace('\'', '').replace('\"', '')
       self.tag = self.hashtag
-      self.tweetInfo = json.loads(r'''{{"userName": "{}", "userId": "{}", "followers": "{}", "dateTime": "{}", "tag": "{}", "body": "{}", "lang": "{}", "location": "{}"}}'''.format(self.userName, self.userId, self.followers, self.date, self.tag, self.body, self.lang, self.location), strict=False)
+      self.tweetInfo = json.loads(r'''{{"userName": "{}", "userId": "{}", "followers": "{}", "dateTime": "{}", "tag": "{}", "body": "{}", "lang": "{}", "location": "{}"}}'''.format(self.userName, self.userId, self.followers, self.date, self.tag, self.body, self.lang, self.location).replace("\\", ""), strict=False)
       self.tweetRecord = Tweet(**self.tweetInfo)
       self.tweetRecord.save()
       self.dict_['userName'].append(tweet['user']['screen_name'])
@@ -38,7 +39,6 @@ class TweetHandler(Twython):
     #print(self.dataFrame.head(5))
     #print(self.dataFrame.head(5).to_json(orient='records'))
     self.response.append(json.loads(self.dataFrame.head(5).to_json(orient='records')))
-
     disconnect()
     return self.response
     
