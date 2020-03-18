@@ -41,12 +41,3 @@ class DbHandler():
         return list(self.db.tweet.aggregate(self.query))
 
 
-'''
-USO:
-
-from libs.handler.get_from_db import GetFromDb
-
-query = GetFromDb()
-query.GetByDayHour()
-query.GetByTagLocationLang()
-'''

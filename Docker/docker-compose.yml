@@ -5,23 +5,6 @@ volumes:
 networks:
   backend:
 services:
-  mongo:
-    image: mongo
-    command: mongod
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo:/data/db
-    networks:
-      backend:
-        aliases:
-          - mongo
-  api:
-    image: tweetcatcher
-    ports:
-      - "8000:8000"
-    networks:
-      backend:
   elasticsearch:
     container_name: elasticsearch
     hostname: elasticsearch
@@ -75,24 +58,24 @@ services:
       backend:
         aliases:
           - apmserver
-        # grafana:
-  #   image: grafana/grafana
-  #   user: "104"
-  #   depends_on:
-  #     - prometheus
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     backend:
-  #       aliases:
-  #         - grafana
-  # prometheus:
-  #   image: prom/prometheus
-  #   ports:
-  #     - 9090:9090
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   networks:
-  #     backend:
-  #       aliases:
-  #         - prometheus
+  mongo:
+    image: mongo
+    command: mongod
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data/db
+    networks:
+      backend:
+        aliases:
+          - mongo
+  api:
+    depends_on:
+      - mongo
+      - apmserver
+      - elasticsearch
+    image: atilaloise/tweetcatcher
+    ports:
+      - "8000:8000"
+    networks:
+      backend:
