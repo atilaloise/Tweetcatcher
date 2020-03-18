@@ -5,6 +5,6 @@ COPY /src/api /api
 
 RUN pip3 install -r /api/requirements.txt
 
-EXPOSE 5000
+EXPOSE 8000
 # start
-CMD python3 /api/api.py
+CMD cd /api && gunicorn --bind 0.0.0.0 api:app --log-config config/gunicorn-logs.conf

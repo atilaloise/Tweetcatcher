@@ -8,3 +8,4 @@ numpy
 pandas
 pymongo
 flask_prometheus_metrics[flask]
+gunicorn

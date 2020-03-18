@@ -1,4 +1,7 @@
 version: '3.4'
+volumes:
+  elasticsearch:
+  mongo:
 networks:
   backend:
 services:
@@ -7,6 +10,8 @@ services:
     command: mongod
     ports:
       - "27017:27017"
+    volumes:
+      - mongo:/data/db
     networks:
       backend:
         aliases:
@@ -14,10 +19,73 @@ services:
   api:
     image: tweetcatcher
     ports:
-      - "5000:5000"
+      - "8000:8000"
     networks:
       backend:
-  # grafana:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.6.1
+    volumes:
+      - ./logstash:/etc/logstash/conf.d
+    ports:
+      - "5959:5959"
+    networks:
+      backend:
+        aliases:
+          - logstash
+  elasticsearch:
+    container_name: elasticsearch
+    hostname: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    environment:
+      - cluster.name=es-cluster
+      - node.name=es-node-1
+      - path.data=/usr/share/elasticsearch/data
+      - http.port=9200
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - bootstrap.memory_lock=true
+      #- "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      backend:
+        aliases:
+          - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl","-s" ,"-f", "-u", "http://localhost:9200/_cat/health"]
+  # Kibana container. localhost 5601 (ensure this is open on host) --> container 5601. Deployed after Elasticsearch.
+  kibana:
+    container_name: kibana
+    hostname: kibana
+    image: docker.elastic.co/kibana/kibana:7.6.1
+    environment:
+      - server.port=127.0.0.1:5601
+      - elasticsearch.url="http://elasticsearch:9200"
+      - server.name="kibana"
+    ports:
+      - "5601:5601"
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/login"]
+      retries: 6
+    networks:
+      backend:
+        aliases:
+          - kibana
+    depends_on:
+    - 'elasticsearch'    
+  apmserver:
+    image: docker.elastic.co/apm/apm-server:7.6.1
+    volumes:
+      - ./apm-server/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
+    ports:
+      - "8200:8200"
+    networks:
+      backend:
+        aliases:
+          - apmserver
+        # grafana:
   #   image: grafana/grafana
   #   user: "104"
   #   depends_on:
