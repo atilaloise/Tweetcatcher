@@ -22,16 +22,6 @@ services:
       - "8000:8000"
     networks:
       backend:
-  logstash:
-    image: docker.elastic.co/logstash/logstash:7.6.1
-    volumes:
-      - ./logstash:/etc/logstash/conf.d
-    ports:
-      - "5959:5959"
-    networks:
-      backend:
-        aliases:
-          - logstash
   elasticsearch:
     container_name: elasticsearch
     hostname: elasticsearch
@@ -78,7 +68,7 @@ services:
   apmserver:
     image: docker.elastic.co/apm/apm-server:7.6.1
     volumes:
-      - ./apm-server/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
+      - ./apm-server/apm-server.yml:/usr/share/apm-server/apm-server.yml
     ports:
       - "8200:8200"
     networks:

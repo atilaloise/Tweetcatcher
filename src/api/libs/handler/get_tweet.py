@@ -39,7 +39,6 @@ class TweetHandler(Twython):
     #print(self.dataFrame.head(5))
     #print(self.dataFrame.head(5).to_json(orient='records'))
     self.response.append(json.loads(self.dataFrame.head(5).to_json(orient='records')))
-
     disconnect()
     return self.response
     

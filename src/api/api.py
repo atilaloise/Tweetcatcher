@@ -6,12 +6,20 @@ import json
 from libs.handler.get_tweet import TweetHandler
 from libs.handler.get_from_db import DbHandler
 from libs.handler.forms import CredentialsForm
-
+from elasticapm.contrib.flask import ElasticAPM
 
 app = Flask(__name__)
 app.config['SECRET_KEY']= '75cea5dc74444b8389e5bc6ee0afc0da'
 
 api = Api(app)
+app.config['ELASTIC_APM'] = {
+
+  'SERVICE_NAME': 'tweetcatcher',
+
+  'SERVER_URL': 'http://apmserver:8200',
+}
+
+apm = ElasticAPM(app)
 
 TWITTER_APP_KEY = ''
 TWITTER_APP_KEY_SECRET = ''
@@ -36,6 +44,12 @@ class GetTweet(Resource):
     self.TWITTER_ACCESS_TOKEN = TWITTER_ACCESS_TOKEN
     self.TWITTER_ACCESS_TOKEN_SECRET = TWITTER_ACCESS_TOKEN_SECRET
     self.hashtags = hashtags
+    if not self.TWITTER_APP_KEY:
+		    raise ValueError("No TWITTER_APP_KEY")
+    if not self.TWITTER_APP_KEY_SECRET:
+		    raise ValueError("No TWITTER_APP_KEY_SECRET")
+    if not self.TWITTER_APP_KEY_SECRET:
+		    raise ValueError("No hashtags")
     self.queryTwitter = TweetHandler(self.TWITTER_APP_KEY, self.TWITTER_APP_KEY_SECRET,self.TWITTER_ACCESS_TOKEN, self.TWITTER_ACCESS_TOKEN_SECRET)
     self.response = []
     for tag in self.hashtags:
@@ -45,7 +59,6 @@ class GetTweet(Resource):
       self.response.append(self.dict)
     return self.response
   def post(self):
-    print(request.json)
     self.TWITTER_APP_KEY = request.json['TWITTER_APP_KEY']
     self.TWITTER_APP_KEY_SECRET = request.json['TWITTER_APP_KEY_SECRET']
     self.TWITTER_ACCESS_TOKEN = request.json['TWITTER_ACCESS_TOKEN']

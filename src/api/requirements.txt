@@ -7,5 +7,7 @@ flask_wtf
 numpy
 pandas
 pymongo
-flask_prometheus_metrics[flask]
+elastic-apm[flask]
 gunicorn
+python-json-logger
+python3-logstash
